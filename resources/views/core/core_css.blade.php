@@ -20,4 +20,10 @@
     .text-danger {
         font-size: 12px;
     }
+
+    .select2-selection__choice {
+        background-color: #5b47fb !important;
+    }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

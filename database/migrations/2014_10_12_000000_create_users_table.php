@@ -20,11 +20,13 @@ return new class extends Migration
             $table->string('name_ext')->nullable(true);
             $table->enum('gender', ['MALE', 'FEMALE'])->nullable(true);
             $table->tinyInteger('age')->nullable(true);
+            $table->string('org_code')->nullable(true);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['ADMIN', 'ORGANIZER', 'PARTICIPANT'])->default('PARTICIPANT');
             $table->enum('active_flag', ['Y', 'N'])->default('Y');
+            
             $table->rememberToken();
             $table->timestamps();
         });

@@ -24,4 +24,13 @@ class DashboardController extends Controller
     {
         return view('dashboard.events');
     }
+    public function profile()
+    {
+        return view('dashboard.profile');
+    }
+
+    public function event_form($id = null)
+    {
+        return view('dashboard.form.event_form', compact('id'));
+    }
 }

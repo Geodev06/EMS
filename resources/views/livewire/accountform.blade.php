@@ -1,6 +1,4 @@
 <div class="card">
-
-
     <div class="card-body">
         <form action="">
             <div class="row ">

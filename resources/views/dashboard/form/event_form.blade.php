@@ -24,10 +24,10 @@
 
             <div class="col-lg-12">
                 <h4>Event Management</h4>
-                <button class="btn btn-indigo btn-with-icon btn-md" onclick='window.location.replace("/event-form")'><i class="typcn typcn-plus"></i> Create Event</button>
             </div>
+
             <div class="col-lg-12">
-                <livewire:eventcards />
+                <livewire:eventform  id="{{ $id ?? null }}" />
             </div>
         </div>
     </div>

@@ -22,9 +22,14 @@ Route::controller(GuestController::class)->group(function() {
 
 Route::controller(DashboardController::class)->group(function() {
     Route::get('/dashboard','dashboard')->name('dashboard');
+    Route::get('/profile','profile')->name('profile');
+
 
     Route::get('/organizer','organizer')->name('organizer');
+
     Route::get('/events','events')->name('events');
+    Route::get('/event-form/{id?}','event_form')->name('event.form');
+
 
 
 });
