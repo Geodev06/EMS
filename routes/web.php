@@ -22,4 +22,9 @@ Route::controller(GuestController::class)->group(function() {
 
 Route::controller(DashboardController::class)->group(function() {
     Route::get('/dashboard','dashboard')->name('dashboard');
+
+    Route::get('/organizer','organizer')->name('organizer');
+    Route::get('/events','events')->name('events');
+
+
 });
