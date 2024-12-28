@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\JoinedEventsController;
+use App\Http\Controllers\TimesheetController;
+use App\Models\Timesheet;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,21 +18,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::controller(GuestController::class)->group(function() {
-    Route::get('/','login')->name('login');
-    Route::get('/register','register')->name('register');
+Route::controller(GuestController::class)->group(function () {
+    Route::get('/', 'login')->name('login');
+    Route::get('/register', 'register')->name('register');
 });
 
-Route::controller(DashboardController::class)->group(function() {
-    Route::get('/dashboard','dashboard')->name('dashboard');
-    Route::get('/profile','profile')->name('profile');
+Route::controller(DashboardController::class)->group(function () {
+    Route::get('/dashboard', 'dashboard')->name('dashboard')->middleware('auth');
+    Route::get('/profile', 'profile')->name('profile')->middleware('auth');
+    Route::get('/join-events', 'joined_events')->name('joined_events')->middleware('auth');
 
 
-    Route::get('/organizer','organizer')->name('organizer');
 
-    Route::get('/events','events')->name('events');
-    Route::get('/event-form/{id?}','event_form')->name('event.form');
+    Route::get('/organizer', 'organizer')->name('organizer')->middleware('auth');
 
-
+    Route::get('/events', 'events')->name('events')->middleware('auth');
+    Route::get('/event-form/{id?}', 'event_form')->name('event.form')->middleware('auth');
+});
+Route::controller(JoinedEventsController::class)->group(function () {
+    Route::post('/submit-join', 'join')->name('join')->middleware('auth');
+});
+Route::controller(TimesheetController::class)->group(function () {
+    Route::get('/event-time-sheet/{id}', 'time_sheet')->name('time_sheet')->middleware('auth');
+    Route::post('/time_in', 'time_in')->name('time_in')->middleware('auth');
 
 });
+
+

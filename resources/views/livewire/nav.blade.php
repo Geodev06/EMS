@@ -13,18 +13,27 @@
                 <li class="nav-item {{ Route::is('dashboard') ? 'active show' : ''   }}">
                     <a href="{{ route('dashboard') }}" class="nav-link"><i class="typcn typcn-chart-area-outline"></i> Dashboard</a>
                 </li>
+                
                 <li class="nav-item">
-                    <a href="chart-chartjs.html" class="nav-link"><i class="typcn typcn-book"></i> Certificates</a>
+                    <a href="{{ route('joined_events') }}" class="nav-link"><i class="typcn typcn-book"></i>Join Events</a>
                 </li>
+                @if(Auth::user()->role == 'ADMIN')
                 <li class="nav-item {{ Route::is('organizer') ? 'active show' : ''}}">
                     <a href="{{ route('organizer') }} " wire:navigate class="nav-link"><i class="typcn typcn-user"></i> Organizers</a>
                 </li>
+                @endif
+                @if(Auth::user()->role == 'ADMIN' || Auth::user()->role == 'ORGANIZER')
                 <li class="nav-item {{ Route::is('events') ? 'active show' : ''}}">
                     <a href="{{ route('events') }}" wire:navigate class="nav-link"><i class="typcn typcn-calendar"></i> Events</a>
                 </li>
+                @endif
+
+                @if(Auth::user()->role == 'ADMIN' || Auth::user()->role == 'ORGANIZER')
                 <li class="nav-item">
                     <a href="form-elements.html" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Evaluations</a>
                 </li>
+                @endif
+
                 <!-- <li class="nav-item">
                     <a href="" class="nav-link with-sub"><i class="typcn typcn-book"></i> Management</a>
                     <div class="az-menu-sub">

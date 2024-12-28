@@ -5,9 +5,16 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <h5 class="card-title text-truncate" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $dt->title ?? '' }} </h5>
-                    <button class="btn btn-success btn-icon mr-1" @click="$dispatch('edit', { id : {{ $dt->id}} } )">
-                        <i class="typcn typcn-pencil"></i>
-                    </button>
+                    <div class="d-flex">
+                        <button class="btn btn-success btn-icon mr-1" @click="$dispatch('edit', { id : {{ $dt->id}} } )">
+                            <i class="typcn typcn-pencil"></i>
+                        </button>
+                        @if($dt->status == 'ONGOING')
+                        <a class="btn btn-info btn-icon mr-1" href="{{ route('time_sheet', encrypt($dt->id) ) }}">
+                            <i class="typcn typcn-document-text"></i>
+                        </a>
+                        @endif
+                    </div>
                 </div>
             </div>
             <div class="card-body">

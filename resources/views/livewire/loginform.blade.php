@@ -15,7 +15,7 @@
                             <input type="text" class="form-control" placeholder="Enter your email" wire:model="email">
                             <div class="text-danger">@error('email') {{ $message }} @enderror</div>
 
-                        </div><!-- form-group -->
+                        </div>
                         <div class="form-group">
                             <label>Password</label>
                             <input type="password" class="form-control" placeholder="Enter your password" wire:model="password">
