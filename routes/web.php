@@ -18,8 +18,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/template-1', function () {
+    return view('templates.template_1');
+});
+
+
 Route::controller(GuestController::class)->group(function () {
     Route::get('/', 'login')->name('login');
+   
     Route::get('/register', 'register')->name('register');
 });
 
@@ -27,6 +33,8 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/dashboard', 'dashboard')->name('dashboard')->middleware('auth');
     Route::get('/profile', 'profile')->name('profile')->middleware('auth');
     Route::get('/join-events', 'joined_events')->name('joined_events')->middleware('auth');
+    Route::get('/certificates-templates', 'certificates')->name('certificates')->middleware('auth');
+
 
 
 
@@ -34,6 +42,7 @@ Route::controller(DashboardController::class)->group(function () {
 
     Route::get('/events', 'events')->name('events')->middleware('auth');
     Route::get('/event-form/{id?}', 'event_form')->name('event.form')->middleware('auth');
+    Route::get('/attendees/{id}', 'attendees')->name('attendees')->middleware('auth');
 });
 Route::controller(JoinedEventsController::class)->group(function () {
     Route::post('/submit-join', 'join')->name('join')->middleware('auth');
@@ -41,7 +50,4 @@ Route::controller(JoinedEventsController::class)->group(function () {
 Route::controller(TimesheetController::class)->group(function () {
     Route::get('/event-time-sheet/{id}', 'time_sheet')->name('time_sheet')->middleware('auth');
     Route::post('/time_in', 'time_in')->name('time_in')->middleware('auth');
-
 });
-
-

@@ -26,6 +26,11 @@
                 <li class="nav-item {{ Route::is('events') ? 'active show' : ''}}">
                     <a href="{{ route('events') }}" wire:navigate class="nav-link"><i class="typcn typcn-calendar"></i> Events</a>
                 </li>
+
+                <li class="nav-item {{ Route::is('certificates') ? 'active show' : ''}}">
+                    <a href="{{ route('certificates') }}"  class="nav-link"><i class="typcn typcn-star"></i> Certificates</a>
+                </li>
+
                 @endif
 
                 @if(Auth::user()->role == 'ADMIN' || Auth::user()->role == 'ORGANIZER')

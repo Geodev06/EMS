@@ -136,6 +136,75 @@
                     </div>
                 </div>
 
+                <div class="col-lg-12">
+                    <hr>
+                    <h4>Signatories</h4>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 1</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Name" wire:model="signatory_1">
+                        <div class="text-danger">@error('signatory_1') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 1 Position/Designation</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Position/Designation" wire:model="signatory_1_pos">
+                        <div class="text-danger">@error('signatory_1_pos') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 2</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Name" wire:model="signatory_2">
+                        <div class="text-danger">@error('signatory_2') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 2 Position/Designation</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Position/Designation" wire:model="signatory_2_pos">
+                        <div class="text-danger">@error('signatory_2_pos') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 3</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Name" wire:model="signatory_3">
+                        <div class="text-danger">@error('signatory_3') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 3 Position/Designation</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Position/Designation" wire:model="signatory_3_pos">
+                        <div class="text-danger">@error('signatory_3_pos') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 4</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Name" wire:model="signatory_4">
+                        <div class="text-danger">@error('signatory_4') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label>Signatory 4 Position/Designation</label>
+                        <input type="text" class="form-control" style="color: black; font-weight: 500" placeholder="Enter Position/Designation" wire:model="signatory_4_pos">
+                        <div class="text-danger">@error('signatory_4_pos') {{ $message }} @enderror</div>
+                    </div>
+                </div>
+
                 <div class="col-sm-12 mt-4 d-flex">
                     <button class="mx-2 btn btn-indigo btn-with-icon " type="button" wire:click="submit">Save <i class="far fa-check-circle ml-2"></i>
                     </button>

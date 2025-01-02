@@ -9,6 +9,9 @@
                         <button class="btn btn-success btn-icon mr-1" @click="$dispatch('edit', { id : {{ $dt->id}} } )">
                             <i class="typcn typcn-pencil"></i>
                         </button>
+                        <button class="btn btn-secondary btn-icon mr-1" @click="$dispatch('view_attendees', { id : {{ $dt->id}} } )">
+                            <i class="typcn typcn-th-list"></i>
+                        </button>
                         @if($dt->status == 'ONGOING')
                         <a class="btn btn-info btn-icon mr-1" href="{{ route('time_sheet', encrypt($dt->id) ) }}">
                             <i class="typcn typcn-document-text"></i>

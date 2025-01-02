@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Event;
+use App\Models\Signatory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,12 @@ class Eventform extends Component
         $participants,
         $no_of_participants;
 
+    public $signatory_1, $signatory_1_pos;
+    public $signatory_2, $signatory_2_pos;
+    public $signatory_3, $signatory_3_pos;
+    public $signatory_4, $signatory_4_pos;
+
+
 
     public function reset_fields()
     {
@@ -45,6 +52,19 @@ class Eventform extends Component
         $this->status = '';
         $this->certificate_id = '';
         $this->no_of_participants = '';
+
+        $this->signatory_1 = '';
+        $this->signatory_1_pos = '';
+
+        $this->signatory_2 = '';
+        $this->signatory_2_pos = '';
+
+        $this->signatory_3 = '';
+        $this->signatory_3_pos = '';
+
+        $this->signatory_4 = '';
+        $this->signatory_4_pos = '';
+
     }
 
     public function mount($id = null)
@@ -69,6 +89,23 @@ class Eventform extends Component
                 $this->certificate_id = $event->certificate_id ?? '';
                 $this->no_of_participants = $event->no_of_participants ?? '';
             }
+
+            $signatory = Signatory::where('event_id', $event_id)->first();
+
+            if($signatory) {
+                $this->signatory_1 = $signatory->signatory_1;
+                $this->signatory_1_pos = $signatory->signatory_1_pos;
+
+                $this->signatory_2 = $signatory->signatory_2;
+                $this->signatory_2_pos = $signatory->signatory_2_pos;
+
+                $this->signatory_3 = $signatory->signatory_3;
+                $this->signatory_3_pos = $signatory->signatory_3_pos;
+
+                $this->signatory_4 = $signatory->signatory_4;
+                $this->signatory_4_pos = $signatory->signatory_4_pos;
+
+            }
         }
     }
     public function submit()
@@ -92,8 +129,22 @@ class Eventform extends Component
             'reg_end_time' => 'required|date_format:H:i|after:reg_start_time',
 
             'certificate_id' => 'required',
-            'status' => 'required',
+            'status' => 'required'
 
+        ]);
+
+        $signatories = $this->validate([
+            'signatory_1' => 'nullable|max:255',
+            'signatory_1_pos' => 'nullable|max:255',
+
+            'signatory_2' => 'nullable|max:255',
+            'signatory_2_pos' => 'nullable|max:255',
+
+            'signatory_3' => 'nullable|max:255',
+            'signatory_3_pos' => 'nullable|max:255',
+
+            'signatory_4' => 'nullable|max:255',
+            'signatory_4_pos' => 'nullable|max:255',
         ]);
 
 
@@ -104,7 +155,9 @@ class Eventform extends Component
                 $validated['code'] = $this->generate_code();
                 $validated['created_by'] = Auth::user()->id;
 
-                Event::create($validated);
+                $event_id = Event::create($validated);
+                $signatories['event_id'] = $event_id['id'];
+                Signatory::create($signatories);
                 $this->dispatch('response', 'Event Successfully created!.');
                 $this->reset_fields();
             }
@@ -113,7 +166,13 @@ class Eventform extends Component
                 $evt = Event::find($this->id);
                 if ($evt) {
                     $evt->update($validated);
-                    $this->dispatch('response', 'Event account has been updated!');
+
+                    Signatory::updateOrCreate(
+                        ['event_id' => $this->id], 
+                        $signatories  
+                    );
+
+                    $this->dispatch('response', 'Event has been updated!');
                 } else {
                     $this->dispatch('response', 'Event not found!');
                 }
