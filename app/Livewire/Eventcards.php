@@ -17,11 +17,19 @@ class Eventcards extends Component
     {
         $this->redirect('/event-form/' . encrypt($id), true);
     }
+
     #[On('view_attendees')]
     public function view_attendees($id)
     {
         $this->redirect('/attendees/' . encrypt($id));
     }
+
+    #[On('misc_attachments')]
+    public function misc_attachments($id)
+    {
+        $this->redirect('/event-attachtments/' . encrypt($id));
+    }
+
     public function render()
     {
         $events = Event::where('created_by', Auth::user()->id)

@@ -65,16 +65,11 @@
     <div class="modal fade" id="modal_preview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modal_preview">Modal title</h1>
-                    
-                </div>
-                <div class="modal-body">
-                   
+                <div class="modal-body cnt">
+
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="$('#modal_preview').modal('hide')">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary btn-x" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -86,9 +81,28 @@
     <script>
         $(document).ready(function() {
             $('.table-responsive').on('click', 'td .btn-modal', function(e) {
-                var id = $(this).attr('data-id'); // Get the value of data-id
+                var template_id = $(this).attr('data-id'); // Get the value of data-id
                 $('#modal_preview').modal('show')
+
+                $('.cnt').html('');
+
+
+                console.log(template_id)
+                $.get("/preview-template", {
+                        template: template_id
+                    })
+                    .done(function(res) {
+                        $('.cnt').html(res);
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
+                        var errorMessage = "An error occurred. Please try again later.";
+
+                        console.error("Error: " + textStatus, errorThrown);
+
+                        $('.cnt').html(errorMessage);
+                    });
             })
+
         })
     </script>
 

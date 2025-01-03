@@ -17,15 +17,23 @@ return new class extends Migration
 
             $table->string('signatory_1', 255)->nullable(true);
             $table->string('signatory_1_pos', 255)->nullable(true);
+            $table->text('signatory_1_img',1000)->nullable(true);
+
 
             $table->string('signatory_2', 255)->nullable(true);
             $table->string('signatory_2_pos', 255)->nullable(true);
+            $table->text('signatory_2_img',1000)->nullable(true);
+
 
             $table->string('signatory_3', 255)->nullable(true);
             $table->string('signatory_3_pos', 255)->nullable(true);
+            $table->text('signatory_3_img',1000)->nullable(true);
+
 
             $table->string('signatory_4', 255)->nullable(true);
             $table->string('signatory_4_pos', 255)->nullable(true);
+            $table->text('signatory_4_img',1000)->nullable(true);
+
 
 
             $table->timestamps();

@@ -13,14 +13,22 @@ class Signatory extends Model
         
         'signatory_1',
         'signatory_1_pos',
+        'signatory_1_img',
+
 
         'signatory_2',
         'signatory_2_pos',
+        'signatory_2_img',
+
 
         'signatory_3',
         'signatory_3_pos',
+        'signatory_3_img',
+
 
         'signatory_4',
         'signatory_4_pos',
+        'signatory_4_img',
+
     ];
 }

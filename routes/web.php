@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/template-1', function () {
-    return view('templates.template_1');
+    return view('templates.template_2');
+    
 });
 
 
@@ -27,6 +28,7 @@ Route::controller(GuestController::class)->group(function () {
     Route::get('/', 'login')->name('login');
    
     Route::get('/register', 'register')->name('register');
+
 });
 
 Route::controller(DashboardController::class)->group(function () {
@@ -36,13 +38,18 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/certificates-templates', 'certificates')->name('certificates')->middleware('auth');
 
 
-
-
     Route::get('/organizer', 'organizer')->name('organizer')->middleware('auth');
 
     Route::get('/events', 'events')->name('events')->middleware('auth');
     Route::get('/event-form/{id?}', 'event_form')->name('event.form')->middleware('auth');
     Route::get('/attendees/{id}', 'attendees')->name('attendees')->middleware('auth');
+    Route::get('/event-attachtments/{id}', 'event_attachtments')->name('event_attachtments')->middleware('auth');
+
+
+    Route::get('/preview-template', 'template_preview')->name('template_preview')->middleware('auth');
+    Route::post('/upload-signature', 'upload_signature')->name('upload_signature')->middleware('auth');
+
+
 });
 Route::controller(JoinedEventsController::class)->group(function () {
     Route::post('/submit-join', 'join')->name('join')->middleware('auth');
