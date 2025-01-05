@@ -24,7 +24,15 @@ class DashboardController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard.dashboard_index');
+        $no_of_users = User::whereIn('role',['PARTICIPANT','ORGANIZER'])->count();
+        $my_event_counts = Event::where('created_by', Auth::user()->id)->count();
+        $no_of_joined = JoinedEvent::where('created_by', Auth::user()->id)->count();
+
+        $no_of_organizers = User::whereIn('role',['ORGANIZER'])->count();
+
+
+
+        return view('dashboard.dashboard_index', compact('no_of_users','my_event_counts','no_of_joined','no_of_organizers'));
     }
 
     public function organizer()

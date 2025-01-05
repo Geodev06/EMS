@@ -29,6 +29,9 @@ Route::controller(GuestController::class)->group(function () {
    
     Route::get('/register', 'register')->name('register');
 
+    Route::get('/get-analytics', 'get_analytics')->middleware('auth');
+
+
 });
 
 Route::controller(DashboardController::class)->group(function () {
