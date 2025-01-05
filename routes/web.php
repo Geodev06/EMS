@@ -36,7 +36,7 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/profile', 'profile')->name('profile')->middleware('auth');
     Route::get('/join-events', 'joined_events')->name('joined_events')->middleware('auth');
     Route::get('/certificates-templates', 'certificates')->name('certificates')->middleware('auth');
-
+    Route::get('/evaluations-questions', 'evaluations')->name('evaluations')->middleware('auth');
 
     Route::get('/organizer', 'organizer')->name('organizer')->middleware('auth');
 
@@ -45,9 +45,15 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/attendees/{id}', 'attendees')->name('attendees')->middleware('auth');
     Route::get('/event-attachtments/{id}', 'event_attachtments')->name('event_attachtments')->middleware('auth');
 
-
     Route::get('/preview-template', 'template_preview')->name('template_preview')->middleware('auth');
     Route::post('/upload-signature', 'upload_signature')->name('upload_signature')->middleware('auth');
+
+    Route::get('/event-evaluation/{id}', 'event_evaluation')->name('event_evaluation')->middleware('auth');
+    Route::post('/submit-evaluation', 'submit_evaluation')->name('submit_evaluation')->middleware('auth');
+
+    Route::get('/certification/{id}', 'certification')->name('certification')->middleware('auth');
+    
+    Route::get('/render-template', 'render_template')->name('render_template')->middleware('auth');
 
 
 });

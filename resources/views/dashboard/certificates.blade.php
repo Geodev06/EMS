@@ -86,8 +86,6 @@
 
                 $('.cnt').html('');
 
-
-                console.log(template_id)
                 $.get("/preview-template", {
                         template: template_id
                     })

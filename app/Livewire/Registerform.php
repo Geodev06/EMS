@@ -19,8 +19,17 @@ class Registerform extends Component
         $validated = $this->validate([
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'email' => 'required|email|unique:users,email|max:255',
+            'email' =>
+            [
+                'required',
+                'email',
+                'unique:users,email',
+                'max:255',
+                'regex:/^[a-zA-Z0-9._%+-]+@(lspu.edu.ph)$/',
+            ],
             'password' => 'required|min:8|max:255'
+        ], [
+            'email.regex' => 'Email domain should be lspu.edu.ph'
         ]);
 
         try {
@@ -37,7 +46,6 @@ class Registerform extends Component
             $this->last_name = '';
             $this->email = '';
             $this->password = '';
-            
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error($th->getMessage());

@@ -22,8 +22,6 @@
                 <p class="text-danger">This device is currently offline.</p>
             </div>
 
-
-
             <div class="col-lg-12">
                 <h4>Join Events</h4>
                 <p>Enter the code to join an event</p>
@@ -52,9 +50,33 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
                             <h5 class="card-title text-truncate" style="max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $dt->title ?? '' }} </h5>
-                            <button class="btn btn-info btn-icon mr-1" >
-                                <i class="typcn typcn-info"></i>
-                            </button>
+                            <div class="d-flex">
+                                <button class="btn btn-indigo btn-icon mr-1 btn-view-event" 
+                                data-event_id="{{ $dt->id }}"
+                                data-title="{{ $dt->title }}"
+                                data-particulars="{{ $dt->particulars }}"
+
+                                data-reg_start_date="{{ \Carbon\Carbon::parse($dt->reg_start_date . ' ' . $dt->reg_start_time)->format('Y-m-d h:i A') }}"
+                                data-reg_end_date="{{ \Carbon\Carbon::parse($dt->reg_end_date . ' ' . $dt->reg_end_time)->format('Y-m-d h:i A') }}"
+
+                                data-start_date="{{ \Carbon\Carbon::parse($dt->start_date . ' ' . $dt->start_time)->format('Y-m-d h:i A') }}"
+                                data-end_date="{{ \Carbon\Carbon::parse($dt->end_date . ' ' . $dt->end_time)->format('Y-m-d h:i A') }}"
+
+                                >
+                                    <i class="typcn typcn-document"></i>
+                                </button>
+                                @if($dt->status == 'FINISHED' && $dt->has_evaluation == FALSE)
+                                <button class="btn btn-success btn-icon mr-1 btn-feedback" data-url="{{ route('event_evaluation', encrypt($dt->id)) }}">
+                                    <i class="typcn typcn-document"></i>
+                                </button>
+                                @endif
+
+                                @if($dt->status == 'FINISHED' && $dt->has_evaluation == TRUE)
+                                <button class="btn btn-danger btn-icon mr-1 btn-certificate" data-url="{{ route('certification', encrypt($dt->id)) }}">
+                                    <i class="typcn typcn-business-card"></i>
+                                </button>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
@@ -97,8 +119,91 @@
 
     <x-footer />
 
+    <div class="modal fade" id="modal_preview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>View Event</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 mb-2">
+                            <p class="m-0 text-secondary" style="font-size: 12px;">Title</p>
+                            <h5 class="m-0 title"></h5>
+                        </div>
+                        <div class="col-lg-12 mb-2">
+                            <p class="m-0 text-secondary" style="font-size: 12px;">Particulars</p>
+                            <p class="m-0 particulars"></p>
+                        </div>
+
+                        <div class="col-lg-12">
+                        <hr>
+                            Registration Period
+                        </div>
+                        <div class="col-lg-6 mb-2">
+                            <p class="m-0 text-secondary" style="font-size: 12px;">Start Date</p>
+                            <h5 class="m-0 reg_start_date"></h5>
+                        </div>
+
+                        <div class="col-lg-6 mb-2">
+                            <p class="m-0 text-secondary" style="font-size: 12px;">End Date</p>
+                            <h5 class="m-0 reg_end_date"></h5>
+                        </div>
+
+                        <div class="col-lg-12">
+                        <hr>
+
+                            Execution Date
+                        </div>
+                        <div class="col-lg-6 mb-2">
+                            <p class="m-0 text-secondary" style="font-size: 12px;">Start Date</p>
+                            <h5 class="m-0 start_date"></h5>
+                        </div>
+
+                        <div class="col-lg-6 mb-2">
+                            <p class="m-0 text-secondary" style="font-size: 12px;">End Date</p>
+                            <h5 class="m-0 end_date"></h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-x" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     @include('core.core_scripts')
+    <script>
+        $(document).ready(function(e) {
+            $('.btn-feedback').click(function(e) {
+                var url = $(this).attr('data-url')
+                window.location.replace(url)
+            })
+
+            $('.btn-certificate').click(function(e) {
+                var url = $(this).attr('data-url')
+                window.location.replace(url)
+            })
+
+            $('.btn-view-event').click(function(e) {
+                var id = $(this).attr('data-event_id')
+
+                $('.title').text($(this).attr('data-title'))
+                $('.particulars').text($(this).attr('data-particulars'))
+
+                $('.reg_start_date').text($(this).attr('data-reg_start_date'))
+                $('.reg_end_date').text($(this).attr('data-reg_end_date'))
+
+                $('.start_date').text($(this).attr('data-start_date'))
+                $('.end_date').text($(this).attr('data-end_date'))
+
+
+                $('#modal_preview').modal('show')
+            })
+        })
+    </script>
 
 
 

@@ -171,11 +171,9 @@
 
                             },
                             error: function(xhr, status, error) {
-                                console.log(error);
-                                console.log(xhr);
-
+                             
                                 isProcessing = false;
-                                showNotification("Error", error, 'error');
+                                showNotification("Error", xhr.responseJSON, 'error');
                             }
                         });
                     } else {

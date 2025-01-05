@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Evaluation;
+use App\Models\EvaluationDetail;
 use App\Models\Event;
 use App\Models\JoinedEvent;
+use App\Models\ParamEvalQuestion;
 use App\Models\Signatory;
 use App\Models\Timesheet;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
@@ -60,6 +65,16 @@ class DashboardController extends Controller
 
         // Use the whereIn method to filter by event_ids
         $events = Event::whereIn('id', $event_ids)->paginate(10);
+
+        // Attach a flag to each event indicating whether the user has already submitted an evaluation for it
+        foreach ($events as $event) {
+            $has_evaluation = Evaluation::where('event_id', $event->id)
+                ->where('user_id', Auth::user()->id)
+                ->exists(); // Check if evaluation exists for the event by the authenticated user
+
+            // Attach the flag to the event object
+            $event->has_evaluation = $has_evaluation;
+        }
 
         return view('dashboard.joined_events', compact('events'));
     }
@@ -193,5 +208,144 @@ class DashboardController extends Controller
             'success' => false,
             'message' => 'Signatory is not set'
         ], 400);
+    }
+
+    public function evaluations()
+    {
+        $questions = $this->_contruct_eval();
+        return view('dashboard.evaluations', compact('questions'));
+    }
+
+    public function event_evaluation($id)
+    {
+        $questions = $this->_contruct_eval();
+        return view('dashboard.event_evaluation', compact('questions', 'id'));
+    }
+
+    public function submit_evaluation(Request $request)
+    {
+
+        // Fetch questions where ratable_flag is 'Y' and active_flag is 'Y'
+        $param_questions = ParamEvalQuestion::where('ratable_flag', 'Y')
+            ->where('active_flag', 'Y')
+            ->get(['id'])  // Fetch only the 'id' field for simplicity
+            ->toArray();
+
+        // Create the validation rules and custom messages
+        $validationRules = [];
+        $validationMessages = [];
+
+        // Loop through each question to create the validation rules and custom messages
+        foreach ($param_questions as $question) {
+            $questionId = "question_" . $question['id'];
+
+            // Add a validation rule for each question in the format 'question_<id>' => 'required'
+            $validationRules[$questionId] = 'required';
+
+            // Add a custom message for each question
+            $validationMessages["$questionId.required"] = "This question is required";
+        }
+
+        // Optionally, add validation for remarks
+        $validationRules['remarks'] = 'required|string|max:500';
+        $validationMessages['remarks.required'] = 'Remarks are required';
+        $validationMessages['remarks.string'] = 'Remarks must be a string';
+
+        // Validate the data
+        $validatedData = $request->validate($validationRules, $validationMessages);
+
+
+        try {
+            DB::beginTransaction();
+
+            $existing_eval = Evaluation::where(
+                [
+                    'user_id' => Auth::user()->id,
+                    'event_id' => decrypt($request->event_id)
+                ]
+            )->first();
+
+            if ($existing_eval) {
+                return response()->json([
+                    'message' => 'You have already submit your post evaluation for this event'
+                ], 403);
+            }
+            $evaluation = Evaluation::create([
+                'user_id' => Auth::user()->id,
+                'event_id' => decrypt($request->event_id),
+                'remarks' => $request->remarks
+            ]);
+
+            $no_of_questions = count($validatedData) - 1;
+
+            $total_points = 0;
+            foreach ($validatedData as $questionId => $value) {
+
+                if (str_contains($questionId, 'question_')) {
+                    $questionId = str_replace('question_', '', $questionId);
+                    $total_points += intval($value);
+
+                    EvaluationDetail::create([
+                        'evaluation_id' => $evaluation['id'],
+                        'question_id' => $questionId,
+                        'mark' => intval($value),
+                    ]);
+                }
+            }
+
+            Evaluation::find($evaluation['id'])->update(
+                ['overall' => $total_points]
+            );
+
+            $remarks = $validatedData['remarks'] ?? null;
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Evaluation submitted successfully',
+                'data' => $validatedData
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error($th->getMessage());
+            return response()->json([
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function certification($id)
+    {
+
+        $event = Event::find(decrypt($id));
+
+        if (!$event) {
+            echo  'Event Not Found!';
+            return;
+        }
+
+        return view('dashboard.certification', compact('event'));
+    }
+
+    public function render_template(Request $request)
+    {
+        $view = '';
+
+        $event = Event::find($request->event_id);
+        $participant = User::find($request->user_id);
+        $signatory = Signatory::where('event_id',$request->event_id)->first();
+
+        switch ($request->template_id) {
+            case 1:
+                $view = view('renders.template_1', compact('event', 'participant','signatory'))->render();
+                break;
+            case 2:
+                $view = view('renders.template_2', compact('event', 'participant','signatory'))->render();
+                break;
+            default:
+                return response()->json('Template not found', 404);
+                break;
+        }
+        return response()->json($view, 200);
     }
 }

@@ -1,13 +1,13 @@
 <div class="az-header">
     <div class="container">
         <div class="az-header-left">
-            <a href="/" class="az-logo">lspu.edu.ph</a>
-            <a href="" id="azMenuShow" class="az-header-menu-icon d-lg-none"><span></span></a>
+            <a href="/dashboard" class="az-logo">lspu.edu.ph</a>
+            <a href="/dashboard" id="azMenuShow" class="az-header-menu-icon d-lg-none"><span></span></a>
         </div><!-- az-header-left -->
         <div class="az-header-menu">
             <div class="az-header-menu-header">
-                <a href="/" class="az-logo"><span></span> lspu.edu.ph</a>
-                <a href="" class="close">&times;</a>
+                <a href="/dashboard" class="az-logo"><span></span> lspu.edu.ph</a>
+                <a href="/dashboard" class="close">&times;</a>
             </div><!-- az-header-menu-header -->
             <ul class="nav">
                 <li class="nav-item {{ Route::is('dashboard') ? 'active show' : ''   }}">
@@ -22,7 +22,7 @@
                     <a href="{{ route('organizer') }} " wire:navigate class="nav-link"><i class="typcn typcn-user"></i> Organizers</a>
                 </li>
                 @endif
-                @if(Auth::user()->role == 'ADMIN' || Auth::user()->role == 'ORGANIZER')
+                @if(Auth::user()->role == 'ORGANIZER')
                 <li class="nav-item {{ Route::is('events') ? 'active show' : ''}}">
                     <a href="{{ route('events') }}" wire:navigate class="nav-link"><i class="typcn typcn-calendar"></i> Events</a>
                 </li>
@@ -33,9 +33,9 @@
 
                 @endif
 
-                @if(Auth::user()->role == 'ADMIN' || Auth::user()->role == 'ORGANIZER')
+                @if(Auth::user()->role == 'ADMIN')
                 <li class="nav-item">
-                    <a href="form-elements.html" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Evaluations</a>
+                    <a href="{{ route('evaluations') }}" class="nav-link"><i class="typcn typcn-chart-bar-outline"></i> Evaluations</a>
                 </li>
                 @endif
 

@@ -8,8 +8,8 @@
             <div class="az-img-user">
                 <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="">
             </div><!-- az-img-user -->
-            <h6>{{ Auth::user()->first_name ?? '' }} {{ Auth::user()->last_name ?? '' }}</h6>
-            <span>Participant</span>
+            <h6 class="text-center">{{ Auth::user()->first_name ?? '' }} {{ Auth::user()->last_name ?? '' }}</h6>
+            <span>{{ Auth::user()->role ?? '' }}</span>
         </div><!-- az-header-profile -->
 
         <a href="{{ route('profile') }}" wire:navigate class="dropdown-item"><i class="typcn typcn-user-outline"></i> My Profile</a>
