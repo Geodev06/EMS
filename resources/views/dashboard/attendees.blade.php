@@ -62,6 +62,10 @@
                                 <th>Organization</th>
                                 <th>Gender</th>
                                 <th>Time in</th>
+                                <th width="3%">Evaluation</th>
+                                <th>Feedback Score</th>
+
+
                             </tr>
                         </thead>
                         <tbody>
@@ -72,6 +76,15 @@
                                 <th scope="row">{{ $val['participant_org'] ?? ''}}</th>
                                 <th scope="row">{{ $val['participant_gender'] ?? ''}}</th>
                                 <th scope="row">{{ \Carbon\Carbon::parse($val['created_at'])->format('Y-m-d h:i A') }}</th>
+                                <th scope="row" class="text-center">
+                                    @if($val['evaluation'])
+                                    <i class="typcn typcn-tick text-success"></i>
+                                    @else
+                                    @endif
+                                </th>
+                                <th scope="row">@if($val['eval_result']) {{ $val['eval_result'] .'%' }} @endif</th>
+
+
 
                             </tr>
                             @empty

@@ -45,6 +45,7 @@
                     <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
 
                         <div class="row">
+                            @if(Auth::user()->role == 'ADMIN')
                             <div class="col-lg-4 mb-2">
                                 <div class="card bg-indigo text-white">
                                     <div class="card-body">
@@ -61,6 +62,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
 
                             <div class="col-lg-4 mb-2 h-100 ">
                                 <div class="card bg-indigo text-white ">
@@ -78,6 +80,7 @@
                                 </div>
                             </div>
 
+                            @if(Auth::user()->role == 'ADMIN')
                             <div class="col-lg-4 mb-2 h-100 ">
                                 <div class="card bg-indigo text-white ">
                                     <div class="card-body">
@@ -89,6 +92,7 @@
                                 </div>
 
                             </div>
+                            @endif
 
 
 
@@ -107,37 +111,43 @@
     <script>
         $.get("/get-analytics", {}, function(response) {
 
-            var ctx = document.getElementById('gender').getContext('2d');
-            var myChart = new Chart(ctx, {
-                type: 'pie', // You can change the type to 'line', 'pie', etc.
-                data: {
-                    labels: ['Male', 'Female', 'Unspecified'], // X-axis labels
-                    datasets: [{
-                        label: 'Gender',
-                        data: [response.genders[0], response.genders[1], response.genders[2]], // Values for the chart
-                        backgroundColor: [
-                            '#6f42c1',
-                            '#f10075',
-                            'gainsboro',
 
-                        ], // Background colors for each bar
-                        borderColor: [
-                            '#6f42c1',
-                            '#f10075',
-                            'gainsboro',
+            var is_admin = "{{ Auth::user()->role }}"
 
-                        ], // Border colors for each bar
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+            if (is_admin == 'ADMIN') {
+                var ctx = document.getElementById('gender').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'pie', // You can change the type to 'line', 'pie', etc.
+                    data: {
+                        labels: ['Male', 'Female', 'Unspecified'], // X-axis labels
+                        datasets: [{
+                            label: 'Gender',
+                            data: [response.genders[0], response.genders[1], response.genders[2]], // Values for the chart
+                            backgroundColor: [
+                                '#6f42c1',
+                                '#f10075',
+                                'gainsboro',
+
+                            ], // Background colors for each bar
+                            borderColor: [
+                                '#6f42c1',
+                                '#f10075',
+                                'gainsboro',
+
+                            ], // Border colors for each bar
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
+
 
             var ctx1 = document.getElementById('events').getContext('2d');
             var myChart1 = new Chart(ctx1, {

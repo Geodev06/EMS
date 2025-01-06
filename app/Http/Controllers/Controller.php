@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\ParamEvalQuestion;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 
 class Controller extends BaseController
 {
@@ -35,7 +37,23 @@ class Controller extends BaseController
         if (sizeof($parent_q) <= 0) {
             return [];
         }
-        
+
         return $questions;
+    }
+
+    public function _send_notification($receiver_id, $message = '')
+    {
+
+        $notification = Notification::create([
+            'receiver_id' => $receiver_id,
+            'message' => $message,
+            'created_by' => Auth::user()->id
+        ]);
+
+        if ($notification) {
+            return true;
+        }
+        
+        return false;
     }
 }

@@ -17,7 +17,7 @@ class JoinedEventsController extends Controller
             'event_code' => 'required|max:100'
         ]);
 
-        $event = Event::where('code', $validated['event_code'])->first();
+        $event = Event::where('code', $validated['event_code'])->where('status', 'PENDING')->first();
 
         if (!$event) {
             session()->flash('invalid_code', 'You have entered invalid code. please check your code again or contact your organizer.');
@@ -49,6 +49,8 @@ class JoinedEventsController extends Controller
                         'event_code' => $event->code,
                         'created_by' => Auth::user()->id
                     ]);
+
+                    $this->_send_notification($event->created_by, Auth::user()->first_name . ' ' . Auth::user()->last_name . ' has joined your event.');
 
                     DB::commit();
                     session()->flash('success', 'Successfully joined.');

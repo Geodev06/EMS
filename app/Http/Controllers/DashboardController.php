@@ -24,15 +24,18 @@ class DashboardController extends Controller
 
     public function dashboard()
     {
-        $no_of_users = User::whereIn('role',['PARTICIPANT','ORGANIZER'])->count();
+        $no_of_users = User::whereIn('role', ['PARTICIPANT', 'ORGANIZER'])->count();
         $my_event_counts = Event::where('created_by', Auth::user()->id)->count();
         $no_of_joined = JoinedEvent::where('created_by', Auth::user()->id)->count();
 
-        $no_of_organizers = User::whereIn('role',['ORGANIZER'])->count();
+        $no_of_organizers = User::whereIn('role', ['ORGANIZER'])->count();
 
+        return view('dashboard.dashboard_index', compact('no_of_users', 'my_event_counts', 'no_of_joined', 'no_of_organizers'));
+    }
 
-
-        return view('dashboard.dashboard_index', compact('no_of_users','my_event_counts','no_of_joined','no_of_organizers'));
+    public function account_settings()
+    {
+        return view('dashboard.account_settings');
     }
 
     public function organizer()
@@ -98,6 +101,7 @@ class DashboardController extends Controller
         foreach ($logs as $item) {
             $user = User::where('id', $item->participant_id)->first();
 
+            $eval =  Evaluation::where('user_id', $user->id)->where('event_id', $event->id)->first();
             array_push($participants, [  // Use $participants instead of $participant
                 'participant_name' =>  $user->first_name . ' ' . $user->middle_name . ' ' . $user->last_name . ' ' . $user->name_ext,
                 'participant_role' => $user->role,
@@ -107,6 +111,8 @@ class DashboardController extends Controller
                 'participant_gender' => $user->gender,
                 'time_in' => $item->time_in,
                 'created_at' => $item->created_at,
+                'evaluation' => $eval->created_at ?? null,
+                'eval_result' => $eval->overall ?? null,
 
             ]);
         }
@@ -341,14 +347,14 @@ class DashboardController extends Controller
 
         $event = Event::find($request->event_id);
         $participant = User::find($request->user_id);
-        $signatory = Signatory::where('event_id',$request->event_id)->first();
+        $signatory = Signatory::where('event_id', $request->event_id)->first();
 
         switch ($request->template_id) {
             case 1:
-                $view = view('renders.template_1', compact('event', 'participant','signatory'))->render();
+                $view = view('renders.template_1', compact('event', 'participant', 'signatory'))->render();
                 break;
             case 2:
-                $view = view('renders.template_2', compact('event', 'participant','signatory'))->render();
+                $view = view('renders.template_2', compact('event', 'participant', 'signatory'))->render();
                 break;
             default:
                 return response()->json('Template not found', 404);

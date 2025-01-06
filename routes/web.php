@@ -5,6 +5,10 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\JoinedEventsController;
 use App\Http\Controllers\TimesheetController;
 use App\Models\Timesheet;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +41,8 @@ Route::controller(GuestController::class)->group(function () {
 Route::controller(DashboardController::class)->group(function () {
     Route::get('/dashboard', 'dashboard')->name('dashboard')->middleware('auth');
     Route::get('/profile', 'profile')->name('profile')->middleware('auth');
+    Route::get('/account-settings', 'account_settings')->name('account_settings')->middleware('auth');
+
     Route::get('/join-events', 'joined_events')->name('joined_events')->middleware('auth');
     Route::get('/certificates-templates', 'certificates')->name('certificates')->middleware('auth');
     Route::get('/evaluations-questions', 'evaluations')->name('evaluations')->middleware('auth');
@@ -67,3 +73,45 @@ Route::controller(TimesheetController::class)->group(function () {
     Route::get('/event-time-sheet/{id}', 'time_sheet')->name('time_sheet')->middleware('auth');
     Route::post('/time_in', 'time_in')->name('time_in')->middleware('auth');
 });
+
+Route::get('/forgot-password', function () {
+    return view('auth.forgot-password');
+})->middleware('guest')->name('password.request');
+
+Route::post('/forgot-password', function (Request $request) {
+    $request->validate(['email' => 'required|email']);
+
+    $status = Password::sendResetLink(
+        $request->only('email')
+    );
+
+    return $status === Password::RESET_LINK_SENT
+        ? back()->with(['status' => __($status)])
+        : back()->withErrors(['email' => __($status)]);
+})->middleware('guest')->name('password.email');
+
+Route::get('/reset-password/{token}', function (string $token, Request $request) {
+
+    return view('auth.reset-password', ['token' => $token, 'email' => $request->email]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('/update-reset-password', function (Request $request) {
+
+    $request->validate(['email' => 'required|email', 'password' => 'required|min:6|confirmed']);
+
+
+    $data = [
+        'email' => $request->email,
+        'password' => Hash::make($request->password)
+    ];
+
+    $success =  User::where('email', $request->email)->update($data);
+
+    if ($success) {
+        session()->flash('success_reset','Password has been reset successfully');
+        return redirect()->route('login');
+    } else {
+        return back()->with(['status' => 'Something went wrong please contact administrator']);
+    }
+
+})->middleware('guest')->name('update_reset_password');
